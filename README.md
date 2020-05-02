@@ -17,6 +17,9 @@ $ vagrant up m n1 n2
 # connect master node
 $ vagrant ssh m
 
+# disable swap
+$ sudo swapoff -a
+
 # install cluster
 $ sudo kubeadm init --apiserver-advertise-address=177.27.44.200
 
