@@ -64,12 +64,6 @@ Vagrant.configure("2") do |config|
       # init slave node.
       node.vm.provision "shell", path: "init-slave-node.sh", env: {"NODE_IP" => "#{worker_node_ip}"}
 
-      # prepare kubectl for vagrant user
-      node.vm.provision "shell", privileged: false, path: "prepare-kubectl.sh"
-
-      # prepare kubectl for root user
-      node.vm.provision "shell", privileged: true, path: "prepare-kubectl.sh"
-
     end
   end
 
