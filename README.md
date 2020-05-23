@@ -20,9 +20,6 @@ Manage a kubernetes cluster with Vagrant.
 ## Before Start
 
 ```bash
-# Necessary for execute some commands.
-$ vagrant plugin install vagrant-reload
-
 # Necessary for use .env file.
 $ vagrant plugin install vagrant-env
 
