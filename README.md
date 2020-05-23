@@ -25,9 +25,6 @@ $ vagrant up m n1 n2
 # connect to master node
 $ vagrant ssh m
 
-# use root user before proceed to kubectl
-$ sudo su
-
 # list nodes
 $ kubectl get nodes
 ```
