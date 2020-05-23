@@ -15,6 +15,9 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "shell", path: "pre.sh"
 
+  # should reload after dist-upgrade.
+  config.vm.provision :reload
+
   config.vm.provision "shell", path: "install-docker.sh"
   config.vm.provision "shell", path: "install-kube-tools.sh"
 

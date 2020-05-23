@@ -7,6 +7,7 @@ Manage a kubernetes cluster with Vagrant.
 - [Kubernetes Vagrant](#kubernetes-vagrant)
   - [Table of Contents](#table-of-contents)
   - [Overview](#overview)
+  - [Before Start](#before-start)
   - [Example Usage](#example-usage)
 
 ## Overview
@@ -15,6 +16,13 @@ Manage a kubernetes cluster with Vagrant.
 - *Docker Version:* 19.03.8-3-0
 - *Kubectl Version:* 1.18.2-00
 - *Kubeadm Version:* 1.18.2-00
+
+## Before Start
+
+```bash
+# You need to install vagrant-reload.
+$ vagrant plugin install vagrant-reload
+```
 
 ## Example Usage
 

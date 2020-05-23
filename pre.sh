@@ -6,5 +6,5 @@ apt-get update
 # Pass grub.
 apt-mark hold package grub-pc grub-pc-bin grub2-common grub-common
 
-# Upgrade packages.
-apt-get upgrade -y
+# Upgrade packages and kernel.
+apt-get dist-upgrade -y
