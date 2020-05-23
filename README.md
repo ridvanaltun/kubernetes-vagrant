@@ -20,8 +20,17 @@ Manage a kubernetes cluster with Vagrant.
 ## Before Start
 
 ```bash
-# You need to install vagrant-reload.
+# Necessary for execute some commands.
 $ vagrant plugin install vagrant-reload
+
+# Necessary for use .env file.
+$ vagrant plugin install vagrant-env
+
+# Clone project and go into it.
+$ git clone https://github.com/ridvanaltun/kubernetes-vagrant.git && cd kubernetes-vagrant
+
+# Set your own environment file.
+$ cp .env.example .env
 ```
 
 ## Example Usage
