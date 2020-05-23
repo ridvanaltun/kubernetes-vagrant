@@ -1,57 +1,31 @@
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
+IMAGE_NAME = "bento/ubuntu-18.04"
+MEMORY_SIZE_IN_GB = 2
+CPU_COUNT = 2
+SLAVE_NODE_COUNT = 2
 
-K8S_DEV_BOX_NAME = "ridvanaltun/k8s"
-K8S_DEV_BOX_VERSION = "1.0.0"
-
-MASTER_NODE_IP_START="172.27.44.20"
-WORKER_NODE_IP_START="172.27.44.10"
-
-JOIN_TOKEN="abcdef.1234567890123456"
-
-Vagrant.configure(2) do |config|
-
-  (0..0).each do |i|
-    config.vm.define "m" do |node|
-      node.vm.box = K8S_DEV_BOX_NAME
-      node.vm.box_version = K8S_DEV_BOX_VERSION
-
-      node.vm.hostname = "m"
-      node.vm.network "private_network", ip: "#{MASTER_NODE_IP_START}#{i}"
-
-      # hostname -i must return a routable address on second (non-NATed) network interface
-      # see 5) in http://kubernetes.io/docs/getting-started-guides/kubeadm/#limitations
-      node.vm.provision "shell", inline: "sed 's/127.0.0.1.*m/#{MASTER_NODE_IP_START}#{i} m/' -i /etc/hosts"
-      node.vm.provision "shell", inline: "echo 'cd /vagrant' >> ~/.bashrc && exit", privileged: false
-
-      # Setup resources
-      node.vm.provider "virtualbox" do |vb|
-        vb.memory = "2048"
-        vb.cpus = 2
-      end
-    end
+Vagrant.configure("2") do |config|
+  config.vm.box = IMAGE_NAME
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = 1024 * MEMORY_SIZE_IN_GB
+    vb.cpus = CPU_COUNT
   end
 
-  (1..2).each do |i|
+  config.vm.provision "shell", path: "pre.sh"
+  config.vm.provision "shell", path: "install-docker.sh"
+  config.vm.provision "shell", path: "install-kube-tools.sh"
+  config.vm.provision "shell", path: "post.sh"
+
+  config.vm.define "m" do |master|
+    master.vm.network "private_network", ip: "10.0.0.10"
+    master.vm.hostname = "m"
+    master.vm.provision "shell", path: "init-master-node.sh"
+  end
+
+  (1..SLAVE_NODE_COUNT).each do |i|
     config.vm.define "n#{i}" do |node|
-      node.vm.box = K8S_DEV_BOX_NAME
-      node.vm.box_version = K8S_DEV_BOX_VERSION
-
+      node.vm.network "private_network", ip: "10.0.0.#{i + 11}"
       node.vm.hostname = "n#{i}"
-      node.vm.network "private_network", ip: "#{WORKER_NODE_IP_START}#{i-1}"
-
-      # hostname -i must return a routable address on second (non-NATed) network interface
-      # see 5) in http://kubernetes.io/docs/getting-started-guides/kubeadm/#limitations
-      node.vm.provision "shell", inline: "sed 's/127.0.0.1.*n#{i}/#{WORKER_NODE_IP_START}#{i} n#{i}/' -i /etc/hosts"
-      node.vm.provision "shell", inline: "echo 'cd /vagrant' >> ~/.bashrc && exit", privileged: false
-
-      node.vm.provision "shell", inline: "route add 10.96.0.1 gw #{MASTER_NODE_IP_START}0 && exit", privileged: true, run: "always"
-
-      # Setup resources
-      node.vm.provider "virtualbox" do |vb|
-        vb.memory = "2048"
-        vb.cpus = 2
-      end
+      node.vm.provision "shell", path: "init-slave-node.sh"
     end
   end
 end
