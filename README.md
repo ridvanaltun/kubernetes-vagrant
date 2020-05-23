@@ -33,12 +33,12 @@ $ cp .env.example .env
 ## Example Usage
 
 ```bash
-# up one master and two worker node
+# Up one master and two worker node.
 $ vagrant up m n1 n2
 
-# connect to master node
+# Connect to master node.
 $ vagrant ssh m
 
-# list nodes
+# List nodes.
 $ kubectl get nodes
 ```
