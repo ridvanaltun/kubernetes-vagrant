@@ -18,6 +18,8 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", path: "install-docker.sh"
   config.vm.provision "shell", path: "install-kube-tools.sh"
 
+  config.vm.provision "shell", path: "post.sh"
+
   config.vm.define "m" do |master|
 
     master.vm.network "private_network", ip: "10.0.0.10"
@@ -31,6 +33,9 @@ Vagrant.configure("2") do |config|
 
     # prepare kubectl for root user
     master.vm.provision "shell", privileged: true, path: "prepare-kubectl.sh"
+
+    # install cni.
+    master.vm.provision "shell", path: "install-cni.sh"
 
   end
 
@@ -51,7 +56,5 @@ Vagrant.configure("2") do |config|
 
     end
   end
-
-  config.vm.provision "shell", path: "post.sh"
 
 end
