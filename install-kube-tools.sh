@@ -4,13 +4,18 @@
 apt-get install -y apt-transport-https curl
 
 # Add Kubernetes apt repository.
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-touch /etc/apt/sources.list.d/kubernetes.list
-echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" | tee -a /etc/apt/sources.list.d/kubernetes.list
+
+## Download the Google Cloud public signing key
+curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+
+## Add the Kubernetes apt repository
+echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+## Update apt package index with the new repository
 apt-get update
 
 # Install kubelet, kubeadm and kubectl.
-apt-get install -y kubelet=1.18.2-00 kubeadm=1.18.2-00 kubectl=1.18.2-00
+apt-get install -y kubelet=1.21.2-00 kubeadm=1.21.2-00 kubectl=1.21.2-00
 
 # Hold the Kubernetes components at this specific version.
 apt-mark hold kubelet kubeadm kubectl
